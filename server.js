@@ -10,46 +10,46 @@ const {
     GraphQLNonNull
 } = require('graphql')
 
-const authors = [
-	{ id: 1, name: 'J. K. Rowling' },
-	{ id: 2, name: 'J. R. R. Tolkien' },
-	{ id: 3, name: 'Brent Weeks' }
+const teachers = [
+	{ id: 1, name: 'mike' },
+	{ id: 2, name: 'cassandra' },
+	{ id: 3, name: 'david' }
 ]
 
-const books = [
-	{ id: 1, name: 'Harry Potter and the Chamber of Secrets', authorId: 1 },
-	{ id: 2, name: 'Harry Potter and the Prisoner of Azkaban', authorId: 1 },
-	{ id: 3, name: 'Harry Potter and the Goblet of Fire', authorId: 1 },
-	{ id: 4, name: 'The Fellowship of the Ring', authorId: 2 },
-	{ id: 5, name: 'The Two Towers', authorId: 2 },
-	{ id: 6, name: 'The Return of the King', authorId: 2 },
-	{ id: 7, name: 'The Way of Shadows', authorId: 3 },
-	{ id: 8, name: 'Beyond the Shadows', authorId: 3 }
+const courses = [
+	{ id: 1, name: 'maths', teahcerId: 1 },
+	{ id: 2, name: 'physics', teahcerId: 1 },
+	{ id: 3, name: 'algebra', teacherId: 1 },
+	{ id: 4, name: 'history', teacherId: 2 },
+	{ id: 5, name: 'geography', teacherId: 2 },
+	{ id: 6, name: 'civil science', teacherId: 2 },
+	{ id: 7, name: 'biology', teacherId: 3 },
+	{ id: 8, name: 'chimistry', teacherId: 3 }
 ]
 
-const BookType = new GraphQLObjectType({
-    name: "BookType",
-    description: "this is a book",
+const CourseType = new GraphQLObjectType({
+    name: "CourseType",
+    description: "this is a course",
     fields: () => ({
         id: { type: GraphQLNonNull(GraphQLInt) },
         name: { type: GraphQLNonNull(GraphQLString) },
-        authorId: { type: GraphQLNonNull(GraphQLInt) },
-        author: {
-            type: AuthorType,
-            resolve: (book) => { return authors.find(author => author.id === book.authorId) }
+        teacherId: { type: GraphQLNonNull(GraphQLInt) },
+        teacher: {
+            type: TeacherType,
+            resolve: (course) => { return teachers.find(teacher => teacher.id === course.teacherId) }
         }
     })
 })
 
-const AuthorType = new GraphQLObjectType({
-    name: 'AuthorType',
-    description: 'this is an author of books',
+const TeacherType = new GraphQLObjectType({
+    name: 'TeacherType',
+    description: 'this is an teacher of courses',
     fields: () => ({
         id: {type: GraphQLNonNull(GraphQLInt)},
         name:{ type: GraphQLNonNull(GraphQLString)},
-        books: {
-            type: GraphQLList(BookType),
-            resolve: (author) => { return books.filter(book => book.authorId === author.id)}
+        courses: {
+            type: GraphQLList(CourseType),
+            resolve: (teacher) => { return courses.filter(course => course.teacherId === teacher.id)}
         }
     })
 })
@@ -58,15 +58,15 @@ const routeQuery = new GraphQLObjectType({
     name: 'Query',
     description: 'this the route query',
     fields: () => ({
-        books: {
-            type: GraphQLList(BookType),
-            description: 'this is a list of books',
-            resolve: () => books
+        courses: {
+            type: GraphQLList(CourseType),
+            description: 'this is a list of courses',
+            resolve: () => courses
         },
-        authors: {
-            type: GraphQLList(AuthorType),
-            description: 'this is a list of authors',
-            resolve: () => authors
+        teachers: {
+            type: GraphQLList(TeacherType),
+            description: 'this is a list of teachers',
+            resolve: () => teachers
         }
     })
 })
